@@ -10,6 +10,8 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @user = User.find(params[:id])
+    debugger
   end
 
   # GET /users/new
@@ -23,19 +25,22 @@ class UsersController < ApplicationController
 
   # POST /users
   # POST /users.json
-  def create
+   def create
     @user = User.new(user_params)
-
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    if @user.save
+      # Handle a successful save.
+    else
+      render 'new'
     end
   end
+
+  private
+
+    def user_params
+      params.require(:user).permit(:name, :email, :password,
+                                   :password_confirmation)
+    end
+end
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
